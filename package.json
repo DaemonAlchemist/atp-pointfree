@@ -1,6 +1,6 @@
 {
   "name": "atp-pointfree",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "A point-free helper module",
   "main": "lib/index.js",
   "scripts": {
@@ -23,8 +23,7 @@
   },
   "author": "Andrew Wittrock",
   "license": "MIT",
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
