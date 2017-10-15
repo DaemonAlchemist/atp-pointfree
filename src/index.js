@@ -60,6 +60,8 @@ export const gt = a => b => b > a;
 export const gte = a => b => b >= a;
 export const lt = a => b => b < a;
 export const lte = a => b => b <= a;
+export const equal = a => b => a == b;
+export const notEqual = a => b => a != b;
 
 //String
 export const charAt = index => str => str.charAt(index);
