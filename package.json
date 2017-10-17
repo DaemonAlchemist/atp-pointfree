@@ -1,6 +1,6 @@
 {
   "name": "atp-pointfree",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A point-free helper module",
   "main": "lib/index.js",
   "scripts": {
