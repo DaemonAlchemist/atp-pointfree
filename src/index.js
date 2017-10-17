@@ -1,5 +1,5 @@
 /**
- * Created by Andrea on 10/13/2017.
+ * Created by Andy on 10/13/2017.
  */
 
 //Array functions
@@ -12,13 +12,13 @@ export const find = f => arr => arr.find(f);
 export const findIndex = f => arr => arr.findIndex(f);
 export const first = at(0);
 export const forEach = f => arr => {arr.forEach(f); return arr;};
-export const from  = arr => Array.from(arr);
+export const from = arr => Array.from(arr);
 export const includes = item => arr.includes(item);
 export const indexOf = item => arr.indexOf(item);
 export const isArray = obj => Array.isArray(obj);
 export const joinWith = sep => arr => arr.join(sep);
 export const join = joinWith('');
-export const juxt = funcs => obj => funcs.map(f => f(obj));
+export const juxt = function() {return obj => map(f => typeof f == 'function' ? f(obj) : f)([...arguments]);};
 export const keys = arr => arr.keys();
 export const last = arr => at(arr.length-1)(arr);
 export const lastIndexOf = item => arr.lastIndexOf(item);
@@ -26,7 +26,7 @@ export const map = f => arr => arr.map(f);
 export const pop = arr => {arr = from(arr); arr.pop(); return arr};
 export const push = item => arr => {arr = from(arr); arr.push(item); return arr;};
 export const reduce = (f, initial) => arr => arr.reduce(f, initial);
-export const reduceRight = (f, initial) => arr => arr.reduceRight(f, initial);
+export const reduceRight = (f, initial) => arr => reverse(arr).reduce(f, initial);
 export const reverse = arr => from(arr).reverse();
 export const shift = arr => {arr = from(arr); arr.shift(); return arr;};
 export const slice = (start, end) => arr => arr.slice(start, end);
@@ -38,11 +38,17 @@ export const values = arr => arr.values();
 
 //Object
 export const prop = name => obj => obj[name];
+export const props = juxt;
 export const toString = obj => obj.toString();
 export const toLocaleString = obj => obj.toLocaleString();
 
 //Helpers
-export const compose = funcs => obj => funcs.reduceRight((data, f) => f(data), obj);
+export const compose = function(){
+    return obj => reverse([...arguments]).reduce(
+        (data, f) => typeof f === 'function' ? f(data) : data,
+        obj
+    );
+};
 export const _ = compose;
 export const debug = stuff => {console.log(stuff); return stuff;};
 
