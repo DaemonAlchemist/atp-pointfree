@@ -85,3 +85,12 @@ export const substr = (start, len) => str => str.substr(start, len);
 export const toLowerCase = str => str.toLowerCase();
 export const toUpperCase = str => str.toUpperCase();
 export const trim = str => str.trim();
+
+//Checks
+export const notEmpty = a => new Promise((resolve, reject) => {
+    a ? resolve(a) : reject(a);
+});
+
+export const empty = a => new Promise((resolve, reject) => {
+    a ? reject(a) : resolve(a);
+});
