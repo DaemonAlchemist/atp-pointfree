@@ -68,6 +68,7 @@ export const lt = a => b => b < a;
 export const lte = a => b => b <= a;
 export const equal = a => b => a == b;
 export const notEqual = a => b => a != b;
+export const sortBy = field => (a, b) => a[field] - b[field];
 
 //String
 export const charAt = index => str => str.charAt(index);
