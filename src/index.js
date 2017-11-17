@@ -30,7 +30,11 @@ export const reduceRight = (f, initial) => arr => reverse(arr).reduce(f, initial
 export const reverse = arr => from(arr).reverse();
 export const shift = arr => {arr = from(arr); arr.shift(); return arr;};
 export const slice = (start, end) => arr => arr.slice(start, end);
-//TODO:  splice
+export const splice = (start, length, replace) => arr => {
+    let newArr = [...arr];
+    newArr.splice(start, length, replace);
+    return newArr;
+}
 export const some = f => arr => arr.some(f);
 export const sort = f => arr => from(arr).sort(f);
 export const unshift = item => arr => {arr = from(arr); arr.unshift(item); return arr;};
