@@ -32,7 +32,11 @@ export const shift = arr => {arr = from(arr); arr.shift(); return arr;};
 export const slice = (start, end) => arr => arr.slice(start, end);
 export const splice = (start, length, replace) => arr => {
     let newArr = [...arr];
-    newArr.splice(start, length, replace);
+    if(typeof replace !== 'undefined') {
+        newArr.splice(start, length, replace);
+    } else {
+        newArr.splice(start, length);
+    }
     return newArr;
 }
 export const some = f => arr => arr.some(f);
