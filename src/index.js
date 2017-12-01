@@ -47,6 +47,13 @@ export const values = arr => arr.values();
 //Object
 export const prop = name => obj => obj[name];
 export const props = juxt;
+export const remove = names => obj => {
+    obj = {...obj};
+    [].concat(names).forEach(name => {
+        delete obj[name];
+    });
+    return obj;
+};
 export const toString = obj => obj.toString();
 export const toLocaleString = obj => obj.toLocaleString();
 
@@ -59,6 +66,7 @@ export const compose = function(){
 };
 export const _ = compose;
 export const debug = stuff => {console.log(stuff); return stuff;};
+export const identity = a => a;
 
 //Math
 export const add = a => b => a + b;
