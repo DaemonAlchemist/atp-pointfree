@@ -38,7 +38,7 @@ export const splice = (start, length, replace) => arr => {
         newArr.splice(start, length);
     }
     return newArr;
-}
+};
 export const some = f => arr => arr.some(f);
 export const sort = f => arr => from(arr).sort(f);
 export const unshift = item => arr => {arr = from(arr); arr.unshift(item); return arr;};
@@ -67,6 +67,7 @@ export const compose = function(){
 export const _ = compose;
 export const debug = stuff => {console.log(stuff); return stuff;};
 export const identity = a => a;
+export const get = a => () => a;
 
 //Math
 export const add = a => b => a + b;
@@ -82,8 +83,8 @@ export const gt = a => b => b > a;
 export const gte = a => b => b >= a;
 export const lt = a => b => b < a;
 export const lte = a => b => b <= a;
-export const equal = a => b => a == b;
-export const notEqual = a => b => a != b;
+export const equals = a => b => a == b;
+export const notEquals = a => b => a != b;
 export const sortBy = field => (a, b) => a[field] - b[field];
 
 //String
