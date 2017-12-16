@@ -85,7 +85,9 @@ export const lt = a => b => b < a;
 export const lte = a => b => b <= a;
 export const equals = a => b => a == b;
 export const notEquals = a => b => a != b;
-export const sortBy = field => (a, b) => a[field] - b[field];
+export const sortBy = field => (a, b) => typeof a[field] === 'string'
+    ? a[field].localeCompare(b[field])
+    : a[field] - b[field];
 
 //String
 export const charAt = index => str => str.charAt(index);
