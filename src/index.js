@@ -1,6 +1,3 @@
-/**
- * Created by Andy on 10/13/2017.
- */
 
 //Array functions
 export const at = index => arr => arr[index];
