@@ -2,6 +2,15 @@
 //Array functions
 export const at = index => arr => arr[index];
 export const concat = item => arr => arr.concat(item);
+export const createIndex = (getId, transform = identity) => arr => {
+    const index = arr.reduce(
+        (combined, cur) => Object.assign({}, combined, {
+            [getId(cur)]: transform(cur)
+        }),
+        {}
+    );
+    return id => index[id];
+}
 export const entries = arr => arr.entries();
 export const every = f => arr => arr.every(f);
 export const filter = f => arr => arr.filter(f);
@@ -61,7 +70,14 @@ export const compose = function(){
         obj
     );
 };
+export const composeR = function(){
+    return obj => [...arguments].reduce(
+        (data, f) => typeof f === 'function' ? f(data) : data,
+        obj
+    );
+};
 export const _ = compose;
+export const __ = composeR;
 export const debug = stuff => {console.log(stuff); return stuff;};
 export const identity = a => a;
 export const get = a => () => a;
