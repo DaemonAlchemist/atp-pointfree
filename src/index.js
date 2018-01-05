@@ -17,6 +17,7 @@ export const filter = f => arr => arr.filter(f);
 export const find = f => arr => arr.find(f);
 export const findIndex = f => arr => arr.findIndex(f);
 export const first = at(0);
+export const flatten = arr => arr.reduce((combined, cur) => combined.concat(cur), []);
 export const forEach = f => arr => {arr.forEach(f); return arr;};
 export const from = arr => Array.from(arr);
 export const includes = item => arr.includes(item);
