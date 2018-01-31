@@ -1,10 +1,16 @@
-/**
- * Created by Andy on 10/13/2017.
- */
 
 //Array functions
 export const at = index => arr => arr[index];
 export const concat = item => arr => [].concat(arr).concat(item);
+export const createIndex = (getId, transform = identity) => arr => {
+    const index = arr.reduce(
+        (combined, cur) => Object.assign({}, combined, {
+            [getId(cur)]: transform(cur)
+        }),
+        {}
+    );
+    return id => index[id];
+}
 export const entries = arr => arr.entries();
 export const every = f => arr => arr.every(f);
 export const filter = f => arr => arr.filter(f);
@@ -55,7 +61,7 @@ export const splice = (start, length, replace) => arr => {
         newArr.splice(start, length);
     }
     return newArr;
-}
+};
 export const some = f => arr => arr.some(f);
 export const sort = f => arr => from(arr).sort(f);
 export const unshift = item => arr => {arr = from(arr); arr.unshift(item); return arr;};
@@ -87,9 +93,17 @@ export const compose = function(){
         obj
     );
 };
+export const composeR = function(){
+    return obj => [...arguments].reduce(
+        (data, f) => typeof f === 'function' ? f(data) : data,
+        obj
+    );
+};
 export const _ = compose;
+export const __ = composeR;
 export const debug = stuff => {console.log(stuff); return stuff;};
 export const identity = a => a;
+export const get = a => () => a;
 
 //Math
 export const add = a => b => a + b;
@@ -105,9 +119,11 @@ export const gt = a => b => b > a;
 export const gte = a => b => b >= a;
 export const lt = a => b => b < a;
 export const lte = a => b => b <= a;
-export const equal = a => b => a == b;
-export const notEqual = a => b => a != b;
-export const sortBy = field => (a, b) => a[field] - b[field];
+export const equals = a => b => a == b;
+export const notEquals = a => b => a != b;
+export const sortBy = field => (a, b) => typeof a[field] === 'string'
+    ? a[field].localeCompare(b[field])
+    : a[field] - b[field];
 
 //String
 export const charAt = index => str => str.charAt(index);
