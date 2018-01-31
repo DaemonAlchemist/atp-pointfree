@@ -66,12 +66,6 @@ export const some = f => arr => arr.some(f);
 export const sort = f => arr => from(arr).sort(f);
 export const unshift = item => arr => {arr = from(arr); arr.unshift(item); return arr;};
 export const values = arr => arr.values();
-export const createIndex = (getId, getObject = identity) => arr => {
-    const index = arr.reduce((combined, obj) => Object.assign({}, combined, {
-        [getId(obj)]: getObject(obj)
-    }), {});
-    return id => index[id];
-};
 
 //Object
 export const prop = name => obj => obj[name];
