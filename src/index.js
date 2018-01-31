@@ -4,13 +4,14 @@
 
 //Array functions
 export const at = index => arr => arr[index];
-export const concat = item => arr => arr.concat(item);
+export const concat = item => arr => [].concat(arr).concat(item);
 export const entries = arr => arr.entries();
 export const every = f => arr => arr.every(f);
 export const filter = f => arr => arr.filter(f);
 export const find = f => arr => arr.find(f);
 export const findIndex = f => arr => arr.findIndex(f);
 export const first = at(0);
+export const flatten = arr => arr.reduce((combined, cur) => combined.concat(cur), []);
 export const forEach = f => arr => {arr.forEach(f); return arr;};
 export const from = arr => Array.from(arr);
 export const includes = item => arr.includes(item);
@@ -23,6 +24,22 @@ export const keys = arr => arr.keys();
 export const last = arr => at(arr.length-1)(arr);
 export const lastIndexOf = item => arr.lastIndexOf(item);
 export const map = f => arr => arr.map(f);
+export const partition = partitionFunc => arr => {
+    const index = arr.reduce((partitioned, cur) => {
+        const key = partitionFunc(cur);
+        return Object.assign(
+            {},
+            partitioned,
+            {
+                [key]: partitioned[key]
+                    ? partitioned[key].concat(cur)
+                    : [cur]
+            }
+        )
+    }, {});
+    return id => index[id] || [];
+};
+export const partitionOn = propName => partition(prop(propName));
 export const pop = arr => {arr = from(arr); arr.pop(); return arr};
 export const push = item => arr => {arr = from(arr); arr.push(item); return arr;};
 export const reduce = (f, initial) => arr => arr.reduce(f, initial);
@@ -43,6 +60,12 @@ export const some = f => arr => arr.some(f);
 export const sort = f => arr => from(arr).sort(f);
 export const unshift = item => arr => {arr = from(arr); arr.unshift(item); return arr;};
 export const values = arr => arr.values();
+export const createIndex = (getId, getObject = identity) => arr => {
+    const index = arr.reduce((combined, obj) => Object.assign({}, combined, {
+        [getId(obj)]: getObject(obj)
+    }), {});
+    return id => index[id];
+};
 
 //Object
 export const prop = name => obj => obj[name];
