@@ -48,6 +48,7 @@ export const partition = partitionFunc => arr => {
 export const partitionOn = propName => partition(prop(propName));
 export const pop = arr => {arr = from(arr); arr.pop(); return arr};
 export const push = item => arr => {arr = from(arr); arr.push(item); return arr;};
+export const range = (start, end) => [...Array(end - start + 1).keys()].map(i => i + start);
 export const reduce = (f, initial) => arr => arr.reduce(f, initial);
 export const reduceRight = (f, initial) => arr => reverse(arr).reduce(f, initial);
 export const reverse = arr => from(arr).reverse();
