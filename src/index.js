@@ -1,4 +1,6 @@
 
+//import crypto from 'crypto';
+
 //Array functions
 export const at = index => arr => arr[index];
 export const concat = item => arr => [].concat(arr).concat(item);
@@ -121,12 +123,19 @@ export const sortBy = field => (a, b) => typeof a[field] === 'string'
     : a[field] - b[field];
 
 //String
+export const append = suffix => str => str + suffix;
 export const charAt = index => str => str.charAt(index);
 export const charCodeAt = index => str => str.charCodeAt(index);
-export const append = suffix => str => str + suffix;
-export const prepend = prefix => str => prefix + str;
 export const endsWith = suffix => str.endsWith(suffix);
+export const hash = data => {
+    const str = JSON.stringify(data);
+    //const h = crypto.createHash('sha256');
+    //h.update(str);
+    //return h.digest('hex');
+    return str;
+};
 export const matches = regex => str =>str.match(regex);
+export const prepend = prefix => str => prefix + str;
 export const repeat = count => str => str.repeat(count);
 export const replace = search => replacement => str => str.replace(search, replacement);
 export const search = term => str => str.search(term);
@@ -145,3 +154,6 @@ export const notEmpty = a => new Promise((resolve, reject) => {
 export const empty = a => new Promise((resolve, reject) => {
     a ? reject(a) : resolve(a);
 });
+
+//Control flow
+export const switchOn = (obj, actions) => (actions[obj] || actions.default || (() => undefined))();
