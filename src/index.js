@@ -1,6 +1,4 @@
 
-//import crypto from 'crypto';
-
 //Array functions
 export const at = index => arr => arr[index];
 export const concat = item => arr => [].concat(arr).concat(item);
@@ -71,6 +69,7 @@ export const unshift = item => arr => {arr = from(arr); arr.unshift(item); retur
 export const values = arr => arr.values();
 
 //Object
+export const clone = obj => ({...obj});
 export const prop = name => obj => obj[name];
 export const props = juxt;
 export const remove = names => obj => {
