@@ -2,8 +2,12 @@
  * Created by Andrea on 9/3/2017.
  */
 
-import assert from 'assert';
-import {_, prop, props, map, subFrom, gt, filter, join, debug} from 'atp-pointfree';
+import {assert} from 'chai';
+import {
+    at, concat, createIndex,
+    _, prop, props, map, subFrom, gt, filter, join, debug,
+    clone
+} from 'atp-pointfree';
 
 const people = [
     {name: "Andy", birthday: {year: 1979, month: 3, day: 22}, occupation: "Programmer"},
@@ -34,14 +38,53 @@ const id = _(join, props(name, ":", age));
 const ids = map(id);
 
 describe('ATP-Point-Free', () => {
+    describe("Array functions", () => {
+        describe("at", () => {
+            it('should return the element in the array at the given index', () => {
+                assert.equal(at(0)([0, 1, 2]), 0);
+                assert.equal(at(1)([0, 1, 2]), 1);
+                assert.equal(at(2)([0, 1, 2]), 2);
+            });
+            it("should return undefined for out-of-bound indices", () => {
+                assert.isUndefined(at(-1)([0, 1, 2]));
+                assert.isUndefined(at(3)([0, 1, 2]));
+            })
+        });
+        describe("concat", () => {
+            it("should concatenate arrays", () => {
+                assert.deepEqual(concat([2])([0, 1]), [0, 1, 2]);
+            });
+            it("should work on raw values", () => {
+                assert.deepEqual(concat(1)(0), [0, 1]);
+                assert.deepEqual(concat(2)([0, 1]), [0, 1, 2]);
+                assert.deepEqual(concat([1, 2])(0), [0, 1, 2]);
+            });
+        });
+        describe("createIndex", () => {
+            it("should create an index for an array of items", () => {
+                const getPeople = createIndex(prop("name"))(people);
+                assert.equal(getPeople("Andy").occupation, "Programmer");
+            });
+            it("should return undefined for non-existent items", () => {
+                const getPeople = createIndex(prop("name"))(people);
+                assert.isUndefined(getPeople("I don't exist"));
+            });
+            it("should create references (not copies) of indexed objects", () => {
+                const peopleCopy = people.map(clone);
+                const getPeople = createIndex(prop("name"))(peopleCopy);
+                peopleCopy[0].occupation = "Test";
+                assert.equal(getPeople("Andy").occupation, "Test");
+            });
+        });
+    });
     describe('compose', () => {
         it('should compose functions', () => {
             const adultIds = _(ids, adultsIn(2017));
-            assert.deepEqual(["Andy:38", "Andrea:35"], adultIds(people));
+            assert.deepEqual(["Andy:39", "Andrea:36"], adultIds(people));
         });
         it('should ignore inline comments', () => {
             const adultIds = _(ids, "of the", adultsIn(2017));
-            assert.deepEqual(["Andy:38", "Andrea:35"], adultIds(people));
+            assert.deepEqual(["Andy:39", "Andrea:36"], adultIds(people));
         });
     });
 });
