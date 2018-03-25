@@ -4,7 +4,8 @@ export const at = index => arr => arr[index];
 export const concat = item => arr => [].concat(arr).concat(item);
 export const createIndex = (getId, transform = identity) => arr => {
     const index = arr.reduce(
-        (combined, cur) => Object.assign({}, combined, {
+        (combined, cur) => ({
+            ...combined,
             [getId(cur)]: transform(cur)
         }),
         {}
@@ -20,35 +21,34 @@ export const first = at(0);
 export const flatten = arr => arr.reduce((combined, cur) => combined.concat(cur), []);
 export const forEach = f => arr => {arr.forEach(f); return arr;};
 export const from = arr => Array.from(arr);
-export const includes = item => arr.includes(item);
-export const indexOf = item => arr.indexOf(item);
+export const includes = item => arr => arr.includes(item);
+export const indexOf = item => arr => arr.indexOf(item);
 export const isArray = obj => Array.isArray(obj);
 export const joinWith = sep => arr => arr.join(sep);
 export const join = joinWith('');
 export const juxt = function() {return obj => map(f => typeof f == 'function' ? f(obj) : f)([...arguments]);};
 export const keys = arr => arr.keys();
 export const last = arr => at(arr.length-1)(arr);
-export const lastIndexOf = item => arr.lastIndexOf(item);
+export const lastIndexOf = item => arr => arr.lastIndexOf(item);
 export const map = f => arr => arr.map(f);
 export const partition = partitionFunc => arr => {
     const index = arr.reduce((partitioned, cur) => {
         const key = partitionFunc(cur);
-        return Object.assign(
-            {},
-            partitioned,
-            {
-                [key]: partitioned[key]
-                    ? partitioned[key].concat(cur)
-                    : [cur]
-            }
-        )
+        return {
+            ...partitioned,
+            [key]: partitioned[key]
+                ? partitioned[key].concat(cur)
+                : [cur]
+        };
     }, {});
     return id => index[id] || [];
 };
 export const partitionOn = propName => partition(prop(propName));
 export const pop = arr => {arr = from(arr); arr.pop(); return arr};
 export const push = item => arr => {arr = from(arr); arr.push(item); return arr;};
-export const range = (start, end) => [...Array(end - start + 1).keys()].map(i => i + start);
+export const range = (start, end) =>
+    [...Array(Math.abs(end - start) + 1).keys()]
+        .map(i => start < end ? i + start : start - i);
 export const reduce = (f, initial) => arr => arr.reduce(f, initial);
 export const reduceRight = (f, initial) => arr => reverse(arr).reduce(f, initial);
 export const reverse = arr => from(arr).reverse();

@@ -4,9 +4,9 @@
 
 import {assert} from 'chai';
 import {
-    at, concat, createIndex,
+    at, concat, createIndex, flatten, juxt, partition, range,
     _, prop, props, map, subFrom, gt, filter, join, debug,
-    clone
+    clone, remove
 } from 'atp-pointfree';
 
 const people = [
@@ -76,6 +76,71 @@ describe('ATP-Point-Free', () => {
                 assert.equal(getPeople("Andy").occupation, "Test");
             });
         });
+        describe("flatten", () => {
+            it("should flatten arrays of arrays", () => {
+                assert.deepEqual(flatten([[1, 2], [3, 4], [5, 6]]), [1, 2, 3, 4, 5, 6]);
+            });
+        });
+        describe("juxt (props)", () => {
+            it("should apply an array of functions to an object", () => {
+                assert.deepEqual(
+                    juxt(birthYear, occupation, id)(people[0]),
+                    [1979, "Programmer", "Andy:39"]
+                );
+            });
+            it("should pass through inline comments", () => {
+                assert.deepEqual(
+                    juxt(birthYear, "and", occupation, "and", id)(people[0]),
+                    [1979, "and", "Programmer", "and", "Andy:39"]
+                );
+            });
+        });
+        describe("partition", () => {
+            it("should organize objects according to an index function", () => {
+                const p = partition(n => n % 2)([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+                assert.deepEqual(p(0), [0, 2, 4, 6, 8]);
+                assert.deepEqual(p(1), [1, 3, 5, 7, 9]);
+            });
+            it("should return an empty array for invalid partition indices", () => {
+                const p = partition(n => n % 2)([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+                assert.deepEqual(p(2), []);
+            });
+        });
+        describe("range", () => {
+            it("should produce a range of numbers from start to end, inclusive", () => {
+                assert.deepEqual(range(1, 10), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+            });
+            it("should handle reverse ordering", () => {
+                assert.deepEqual(range(10, 1), [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]);
+            });
+            it("should handle single length ranges", () => {
+                assert.deepEqual(range(1, 1), [1]);
+            });
+        });
+    });
+    describe("Object functions", () => {
+        describe("clone", () => {
+            it("should clone objects", () => {
+                const obj1 = {a: 1, b: 2};
+                let obj2 = clone(obj1);
+                obj2.a = 3;
+                obj2.b = 4;
+                assert.equal(obj1.a, 1);
+                assert.equal(obj1.b, 2);
+            });
+        });
+        describe("remove", () => {
+            it("should remove attributes from objects", () => {
+                const obj = {a: 1, b: 2};
+                assert.deepEqual(remove(["b"])(obj), {a: 1});
+            });
+            it("should not affect the original object", () => {
+                const obj = {a: 1, b: 2};
+                const obj2 = remove(["b"])(obj);
+                assert.deepEqual(obj, {a: 1, b: 2});
+            });
+        });
+
     });
     describe('compose', () => {
         it('should compose functions', () => {
