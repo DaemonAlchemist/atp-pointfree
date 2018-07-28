@@ -146,6 +146,9 @@ export const toUpperCase = str => str.toUpperCase();
 export const trim = str => str.trim();
 
 //Checks
+export const checkAsync = f => new Promise((resolve, reject) => {
+
+});
 export const notEmpty = a => new Promise((resolve, reject) => {
     a ? resolve(a) : reject(a);
 });
