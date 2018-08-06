@@ -1,4 +1,6 @@
 
+import typeOf from "type-of";
+
 //Array functions
 export const at = index => arr => arr[index];
 export const concat = item => arr => [].concat(arr).concat(item);
@@ -27,10 +29,16 @@ export const isArray = obj => Array.isArray(obj);
 export const joinWith = sep => arr => arr.join(sep);
 export const join = joinWith('');
 export const juxt = function() {return obj => map(f => typeof f == 'function' ? f(obj) : f)([...arguments]);};
-export const keys = arr => arr.keys();
+export const keys = obj => typeSwitch(obj, {
+    array: () => obj.keys(),
+    object: () => Object.keys(obj)
+});
 export const last = arr => at(arr.length-1)(arr);
 export const lastIndexOf = item => arr => arr.lastIndexOf(item);
-export const map = f => arr => arr.map(f);
+export const map = f => obj => typeSwitch(obj, {
+    array: () => arr.map(f),
+    object: () => keys(obj).map((val, key) => ({[key]: f(val, key)})).reduce(merge)
+});
 export const partition = partitionFunc => arr => {
     const index = arr.reduce((partitioned, cur) => {
         const key = partitionFunc(cur);
@@ -65,11 +73,38 @@ export const splice = (start, length, replace) => arr => {
 };
 export const some = f => arr => arr.some(f);
 export const sort = f => arr => from(arr).sort(f);
+export const union = (a, b) => unique([].concat(a).concat(b));
+export const unique = arr =>  [...new Set(arr)];
 export const unshift = item => arr => {arr = from(arr); arr.unshift(item); return arr;};
 export const values = arr => arr.values();
 
 //Object
 export const clone = obj => ({...obj});
+export const merge = (a, b) => unique(concat(keys(a))(keys(b)))
+    .reduce((obj, key) => {
+        //If something broke, just return nothing
+        if(typeOf(obj) === 'undefined') return undefined;
+
+        //Ensure that both attributes have the same type
+        const aType = typeOf(a[key]);
+        const bType = typeOf(b[key]);
+        if(aType !== 'undefined' && bType !== 'undefined' && aType !== bType) {
+            console.err(`Merging objects with incompatible types for attribute ${key}`);
+            console.log(a);
+            console.log(b);
+            return undefined;
+        }
+
+        const val =
+            aType === 'undefined' ? b[key] :
+            bType === 'undefined' ? a[key] :
+                                    switchOn(aType, {
+                                        object: () => merge(a[key], b[key]),
+                                        array: () => a[key].concat(b[key]),
+                                        default: () => b[key] || a[key]
+                                    });
+        return {[key]: val, ...obj};
+    }, {});
 export const prop = name => obj => obj[name];
 export const props = juxt;
 export const remove = names => obj => {
@@ -82,7 +117,7 @@ export const remove = names => obj => {
 export const toString = obj => obj.toString();
 export const toLocaleString = obj => obj.toLocaleString();
 
-//Helpers
+//Function composition
 export const compose = function(){
     return obj => reverse([...arguments]).reduce(
         (data, f) => typeof f === 'function' ? f(data) : data,
@@ -97,6 +132,8 @@ export const composeR = function(){
 };
 export const _ = compose;
 export const __ = composeR;
+
+//Helpers
 export const debug = stuff => {console.log(stuff); return stuff;};
 export const identity = a => a;
 export const get = a => () => a;
@@ -159,3 +196,4 @@ export const empty = a => new Promise((resolve, reject) => {
 
 //Control flow
 export const switchOn = (obj, actions) => (actions[obj] || actions.default || (() => undefined))();
+export const typeSwitch = (obj, actions) => switchOn(typeOf(obj), actions);
