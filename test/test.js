@@ -6,7 +6,7 @@ import {assert} from 'chai';
 import {
     at, concat, createIndex, flatten, juxt, partition, range,
     _, prop, props, map, subFrom, gt, filter, join, debug,
-    clone, remove
+    clone, remove, merge
 } from 'atp-pointfree';
 
 const people = [
@@ -140,7 +140,13 @@ describe('ATP-Point-Free', () => {
                 assert.deepEqual(obj, {a: 1, b: 2});
             });
         });
-
+        describe.only("merge", () => {
+            it("should overwrite existing values with blank values", () => {
+                const obj1 = {a: "a", b: "b"};
+                const obj2 = {a: null};
+                assert.deepEqual(merge(obj1, obj2), {a: null, b: "b"});
+            });
+        });
     });
     describe('compose', () => {
         it('should compose functions', () => {

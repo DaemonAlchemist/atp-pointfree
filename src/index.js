@@ -88,12 +88,6 @@ export const merge = (a, b) => unique(concat(keys(a))(keys(b)))
         //Ensure that both attributes have the same type
         const aType = typeOf(a[key]);
         const bType = typeOf(b[key]);
-        if(aType !== 'undefined' && bType !== 'undefined' && aType !== bType) {
-            console.err(`Merging objects with incompatible types for attribute ${key}`);
-            console.log(a);
-            console.log(b);
-            return undefined;
-        }
 
         const val =
             aType === 'undefined' ? b[key] :
@@ -101,7 +95,7 @@ export const merge = (a, b) => unique(concat(keys(a))(keys(b)))
                                     switchOn(aType, {
                                         object: () => merge(a[key], b[key]),
                                         array: () => a[key].concat(b[key]),
-                                        default: () => b[key] || a[key]
+                                        default: () => bType !== 'undefined' ? b[key] : a[key]
                                     });
         return {[key]: val, ...obj};
     }, {});
