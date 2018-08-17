@@ -16,7 +16,14 @@ export const createIndex = (getId, transform = identity) => arr => {
 }
 export const entries = arr => arr.entries();
 export const every = f => arr => arr.every(f);
-export const filter = f => arr => arr.filter(f);
+export const filter = f => obj => typeSwitch(obj, {
+    array: () => obj.filter(f),
+    object: () => Object.keys(obj).reduce((combined, key) => f(obj[key], key)
+        ? {...combined, [key]: obj[key]}
+        : combined,
+        {}
+    )
+});
 export const find = f => arr => arr.find(f);
 export const findIndex = f => arr => arr.findIndex(f);
 export const first = at(0);
@@ -36,7 +43,7 @@ export const keys = obj => typeSwitch(obj, {
 export const last = arr => at(arr.length-1)(arr);
 export const lastIndexOf = item => arr => arr.lastIndexOf(item);
 export const map = f => obj => typeSwitch(obj, {
-    array: () => arr.map(f),
+    array: () => obj.map(f),
     object: () => keys(obj).map((val, key) => ({[key]: f(val, key)})).reduce(merge)
 });
 export const partition = partitionFunc => arr => {

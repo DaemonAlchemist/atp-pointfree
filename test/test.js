@@ -5,7 +5,7 @@
 import {assert} from 'chai';
 import {
     at, concat, createIndex, flatten, juxt, partition, range,
-    _, prop, props, map, subFrom, gt, filter, join, debug,
+    _, prop, props, map, subFrom, gt, filter, join, debug, identity,
     clone, remove, merge
 } from 'atp-pointfree';
 
@@ -81,6 +81,11 @@ describe('ATP-Point-Free', () => {
                 assert.deepEqual(flatten([[1, 2], [3, 4], [5, 6]]), [1, 2, 3, 4, 5, 6]);
             });
         });
+        describe.only("filter", () => {
+            it("should filter objects", () => {
+                assert.deepEqual(filter(identity)({offset: 0, fileName: "Beg", pageSize: 10}), {fileName: "Beg", pageSize: 10});
+            });
+        });
         describe("juxt (props)", () => {
             it("should apply an array of functions to an object", () => {
                 assert.deepEqual(
@@ -140,7 +145,7 @@ describe('ATP-Point-Free', () => {
                 assert.deepEqual(obj, {a: 1, b: 2});
             });
         });
-        describe.only("merge", () => {
+        describe("merge", () => {
             it("should overwrite existing values with blank values", () => {
                 const obj1 = {a: "a", b: "b"};
                 const obj2 = {a: null};
