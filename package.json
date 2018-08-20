@@ -27,6 +27,7 @@
   "author": "Andrew Wittrock",
   "license": "MIT",
   "dependencies": {
+    "kind-of": "^6.0.2",
     "type-of": "^2.0.1"
   },
   "devDependencies": {

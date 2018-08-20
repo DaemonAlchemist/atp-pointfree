@@ -81,7 +81,7 @@ describe('ATP-Point-Free', () => {
                 assert.deepEqual(flatten([[1, 2], [3, 4], [5, 6]]), [1, 2, 3, 4, 5, 6]);
             });
         });
-        describe.only("filter", () => {
+        describe("filter", () => {
             it("should filter objects", () => {
                 assert.deepEqual(filter(identity)({offset: 0, fileName: "Beg", pageSize: 10}), {fileName: "Beg", pageSize: 10});
             });
@@ -145,11 +145,18 @@ describe('ATP-Point-Free', () => {
                 assert.deepEqual(obj, {a: 1, b: 2});
             });
         });
-        describe("merge", () => {
+        describe.only("merge", () => {
             it("should overwrite existing values with blank values", () => {
                 const obj1 = {a: "a", b: "b"};
                 const obj2 = {a: null};
                 assert.deepEqual(merge(obj1, obj2), {a: null, b: "b"});
+            });
+            it("should not treat Sets as objects", () => {
+                const set1 = new Set(['Banner']);
+                const set2 = new Set(['Banner', 'Test']);
+                const obj1 = {a: set1};
+                const obj2 = {a: set2};
+                assert.deepEqual(merge(obj1, obj2), obj2);
             });
         });
     });

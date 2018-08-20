@@ -1,5 +1,6 @@
 
 import typeOf from "type-of";
+import kindOf from 'kind-of';
 
 //Array functions
 export const at = index => arr => arr[index];
@@ -90,11 +91,11 @@ export const clone = obj => ({...obj});
 export const merge = (a, b) => unique(concat(keys(a))(keys(b)))
     .reduce((obj, key) => {
         //If something broke, just return nothing
-        if(typeOf(obj) === 'undefined') return undefined;
+        if(kindOf(obj) === 'undefined') return undefined;
 
         //Ensure that both attributes have the same type
-        const aType = typeOf(a[key]);
-        const bType = typeOf(b[key]);
+        const aType = kindOf(a[key]);
+        const bType = kindOf(b[key]);
 
         const val =
             aType === 'undefined' ? b[key] :
